@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>SOX UAR Mockup</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <style>
+    body { margin:0; font-family: system-ui,-apple-system,Segoe UI,Roboto,sans-serif; background:#f1f5f9; color:#0f172a; }
+    .layout { display:flex; min-height:100vh; }
+    aside { width:60px; background:#fff; border-right:1px solid #e2e8f0; display:flex; flex-direction:column; align-items:center; }
+    header { position:sticky; top:0; height:56px; background:#fff; border-bottom:1px solid #e2e8f0; display:flex; align-items:center; padding:0 16px; justify-content:space-between; }
+    .main { flex:1; display:flex; flex-direction:column; }
+    .content { padding:24px; max-width:1200px; width:100%; margin:0 auto; }
+    .card { background:#fff; border:1px solid #e2e8f0; border-radius:16px; padding:16px 20px; margin-bottom:20px; box-shadow:0 1px 2px rgba(0,0,0,0.04); }
+    .badges { display:flex; flex-wrap:wrap; gap:6px; margin:8px 0 12px; }
+    .badge { background:#f1f5f9; border:1px solid #cbd5e1; padding:3px 8px; border-radius:999px; font-size:11px; }
+    .section-title { font-size:11px; font-weight:600; text-transform:uppercase; letter-spacing:.05em; margin:20px 0 6px; display:flex; align-items:center; gap:6px; }
+    .section-title:before { content:""; width:6px; height:18px; border-radius:3px; background:#6366f1; display:inline-block; }
+    .chat { height:400px; display:flex; flex-direction:column; }
+    .chat-messages { flex:1; overflow:auto; padding:8px 4px; display:flex; flex-direction:column; gap:8px; }
+    .bubble { max-width:70%; padding:8px 12px; border-radius:16px; font-size:14px; line-height:1.35; box-shadow:0 1px 2px rgba(0,0,0,0.08); }
+    .bubble.user { align-self:flex-end; background:#0f172a; color:#fff; }
+    .bubble.bot { background:#ffffff; }
+    .row { display:flex; gap:12px; flex-wrap:wrap; }
+    button { cursor:pointer; font:inherit; }
+    .btn { background:#0f172a; color:#fff; border:none; border-radius:10px; padding:8px 14px; font-size:14px; display:inline-flex; align-items:center; gap:6px; }
+    .btn.secondary { background:#e2e8f0; color:#334155; }
+    .input-row { display:flex; gap:8px; margin-top:8px; }
+    .input-row input { flex:1; padding:8px 10px; border:1px solid #cbd5e1; border-radius:10px; font-size:14px; }
+    .progress-wrap { margin:12px 0 20px; }
+    .progress-bar { height:8px; background:#e2e8f0; border-radius:6px; overflow:hidden; }
+    .progress-bar span { display:block; height:100%; background:#6366f1; width:0; transition:width .4s; }
+    .round { border:1px solid #c7d2fe; background:#eef2ff; padding:12px 14px; border-radius:14px; font-size:14px; margin-bottom:10px; }
+    .round.green { background:#ecfdf5; border-color:#a7f3d0; }
+    .round.amber { background:#fffbeb; border-color:#fde68a; }
+    code { background:#e2e8f0; padding:2px 5px; border-radius:4px; font-size:12px; }
+    @media (min-width:960px) {
+      .grid { display:grid; grid-template-columns:1fr 1.4fr; gap:32px; align-items:start; }
+    }
+  </style>
+</head>
+<body>
+<div id="root"></div>
+
+<script src="https://unpkg.com/react@18/umd/react.development.js" crossorigin></script>
+<script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js" crossorigin></script>
+<script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+
+<script type="text/babel">
+function App(){
+  const [step,setStep]=React.useState(1);
+  const [messages,setMessages]=React.useState([
+    {role:"user", text:"Hi, upload completed."},
+    {role:"bot", text:"Great — Starting Step 1."},
+    {role:"bot", text:"Does scope exclude privileged contractors for Q1 2024?"}
+  ]);
+  const [draft,setDraft]=React.useState("");
+
+  function send(){
+    if(!draft.trim()) return;
+    setMessages(m=>[...m,{role:"user",text:draft.trim()}]);
+    setDraft("");
+    setTimeout(()=>setMessages(m=>[...m,{role:"bot",text:"Acknowledged."}]),500);
+  }
+
+  const pct = Math.round(step/7*100);
+
+  return (
+    <div className="layout">
+      <aside>
+        <div style={{padding:"12px 0", fontWeight:700}}>RSM</div>
+      </aside>
+      <div className="main">
+        <header>
+          <div style={{fontSize:14,fontWeight:600}}>SOX UAR Demo</div>
+          <div style={{fontSize:12,color:"#64748b"}}>Step {step} / 7</div>
+        </header>
+        <div className="content">
+          <div className="grid">
+            <div>
+              <div className="card chat">
+                <h3 style={{margin:"0 0 4px", fontSize:16}}>Chat</h3>
+                <div className="chat-messages">
+                  {messages.map((m,i)=>(
+                    <div key={i} className={"bubble "+(m.role==="user"?"user":"bot")}>{m.text}</div>
+                  ))}
+                </div>
+                <div className="input-row">
+                  <input
+                    placeholder="Type…"
+                    value={draft}
+                    onChange={e=>setDraft(e.target.value)}
+                    onKeyDown={e=>e.key==="Enter"&&send()}
+                  />
+                  <button className="btn secondary" onClick={send}>Send</button>
+                </div>
+              </div>
+            </div>
+            <div>
+              <div className="card">
+                <h2 style={{margin:"0 0 8px"}}>AI Recertification Process</h2>
+                <div className="progress-wrap">
+                  <div className="progress-bar"><span style={{width:pct+"%"}}/></div>
+                  <div style={{fontSize:12, marginTop:4}}>{pct}%</div>
+                </div>
+                <div style={{display:"flex", gap:8, marginBottom:12}}>
+                  <button className="btn secondary" onClick={()=>setStep(s=>Math.min(7,s+1))}>Run All</button>
+                  <button className="btn" disabled={step>=7} onClick={()=>setStep(s=>Math.min(7,s+1))}>Next Step</button>
+                </div>
+
+                <div className="section-title">Current Step</div>
+                <div className="round">
+                  Step {step}: Review information for accuracy and completeness.
+                </div>
+
+                <div className="section-title">Answer</div>
+                <div className="round green">
+                  System under review: <strong>Certent</strong>.
+                </div>
+
+                <div className="section-title">Reasoning</div>
+                <div className="round">
+                  Matched system name across export + UI snippet.
+                </div>
+                <div className="round amber">
+                  No discrepancies detected; proceeding to filter validation.
+                </div>
+              </div>
+            </div>
+          </div>
+          <p style={{marginTop:32, fontSize:11, color:"#64748b"}}>Static demo build — no backend.</p>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById("root")).render(<App/>);
+</script>
+</body>
+</html>

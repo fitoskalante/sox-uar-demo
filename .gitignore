@@ -1,0 +1,74 @@
+### Node / Package managers ###
+node_modules
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+package-lock.json
+yarn.lock
+pnpm-lock.yaml
+
+### Next.js build output ###
+.next/
+out/
+next-env.d.ts
+
+### Production builds ###
+build/
+dist/
+
+### TypeScript ###
+*.tsbuildinfo
+
+### Environment variables ###
+.env
+.env.local
+.env.*.local
+
+### OS / Editor junk ###
+.DS_Store
+Thumbs.db
+*.swp
+*.swo
+*.orig
+*.tmp
+*.temp
+
+### IDE ###
+.vscode/
+.idea/
+*.iml
+
+### Coverage / Reports ###
+coverage/
+reports/
+*.lcov
+
+### Misc caches ###
+.eslintcache
+.stylelintcache
+.parcel-cache
+.cache
+.turbo
+.swc/
+
+### Storybook / Playwright (if added later) ###
+storybook-static/
+test-results/
+playwright-report/
+
+### Docker ###
+docker-data/
+
+### Temporary uploads ###
+/tmp
+tmp/
+
+### Local runtime data ###
+*.pid
+*.seed
+*.pid.lock
+
+### Optional: ignore local index.html prototype ###
+index.html

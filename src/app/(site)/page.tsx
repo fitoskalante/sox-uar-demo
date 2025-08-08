@@ -114,7 +114,7 @@ function Modal({ open, onClose, children }: { open: boolean; onClose: () => void
   );
 }
 
-function Round({ label, children, tone='indigo' as 'indigo'|'emerald'|'amber' }) {
+function Round({ label, children, tone='indigo' }: { label: string; children: React.ReactNode; tone?: 'indigo'|'emerald'|'amber'; }) {
   const ring = tone === 'emerald' ? 'ring-emerald-200 bg-emerald-50' : tone === 'amber' ? 'ring-amber-200 bg-amber-50' : 'ring-indigo-200 bg-indigo-50';
   const dot = tone === 'emerald' ? 'bg-emerald-500' : tone === 'amber' ? 'bg-amber-500' : 'bg-indigo-500';
   return (
@@ -353,7 +353,19 @@ export default function Page(){
                   </CardHeader>
                   {uploadOpen && (
                     <CardContent className="space-y-4 pt-0">
-                      <Dropzone label="Evidence (images, csv, xlsx, pdf)" accept="image/*,.csv,.xlsx,application/pdf" onFiles={(files)=>setEvidenceFiles(prev=>[...Array.from(files).map(f=>({ name: f.name, type: f.type.includes('image')?'image': f.name.endsWith('.xlsx')?'excel': f.name.endsWith('.docx')?'doc':'other'})), ...prev])} />
+                      <Dropzone
+                        label="Evidence (images, csv, xlsx, pdf)"
+                        accept="image/*,.csv,.xlsx,application/pdf"
+                        onFiles={(files)=>{
+                          const classify = (f: File): { name: string; type: 'image'|'excel'|'doc'|'other'; } => {
+                            if (f.type.startsWith('image/')) return { name: f.name, type: 'image' };
+                            if (f.name.toLowerCase().endsWith('.xlsx')) return { name: f.name, type: 'excel' };
+                            if (f.name.toLowerCase().endsWith('.doc') || f.name.toLowerCase().endsWith('.docx')) return { name: f.name, type: 'doc' };
+                            return { name: f.name, type: 'other' };
+                          };
+                          setEvidenceFiles(prev => [...prev, ...Array.from(files).map(classify)]);
+                        }}
+                      />
                       <div className="flex flex-wrap gap-2">{evidenceFiles.map((f,i)=>(<FileChip key={i} name={f.name} type={f.type} />))}</div>
                       <div className="h-px w-full bg-slate-200" />
                       <Dropzone label="Template (instructions)" accept=".doc,.docx,.md,.txt,.pdf" onFiles={(files)=>setTemplateFiles(prev=>[...Array.from(files).map(f=>({ name: f.name, type: 'doc' as const })), ...prev])} />
